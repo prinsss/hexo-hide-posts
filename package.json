@@ -1,0 +1,27 @@
+{
+  "name": "hexo-sage-posts",
+  "version": "0.0.1",
+  "description": "A plugin to hide posts marked as sage (unlisted) from your Hexo blog and makes them only accessible by links.",
+  "main": "index.js",
+  "scripts": {
+    "test": "eslint index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/printempw/hexo-sage-posts.git"
+  },
+  "homepage": "https://github.com/printempw/hexo-sage-posts",
+  "keywords": [
+    "hexo",
+    "plugins",
+    "sage",
+    "unlisted",
+    "private"
+  ],
+  "author": "printempw",
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "^5.8.0",
+    "eslint-config-hexo": "^3.0.0"
+  }
+}
