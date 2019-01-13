@@ -33,6 +33,28 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
 This post will not be shown anywhere, but you can still access it by `https://hexo.test/lorem-ipsum/`.
 
+## Config
+
+In your site's `_config.yml`:
+
+```yml
+# hexo-sage-posts
+sage_posts:
+  filter: hidden    # Change the filter name to fit your need
+```
+
+And the posts of which the front-matter with a `hidden: true` will be your sage posts.
+
+```text
+---
+title: 'Lorem Ipsum'
+date: '2019/8/10 11:45:14'
+hidden: true
+---
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+```
+
 ## License
 
 MIT
