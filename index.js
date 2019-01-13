@@ -16,7 +16,7 @@ hexo.config.sage_posts = Object.assign({
 // just ignore them. We also put the 'sage' posts into `hexo.locals.sage_posts`
 // for further use (to make them correctly processed by 'post' generator).
 hexo.extend.filter.register('before_generate', function () {
-  const config = this.config.sage_posts
+  const config = this.config.sage_posts;
   const all_posts = this.locals.get('posts');
   const sage_posts = this.locals.get('posts').find({ [config.filter]: true });
   const normal_posts = this.locals.get('posts').filter(post => !post[config.filter]);
