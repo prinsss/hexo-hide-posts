@@ -1,27 +1,27 @@
 {
-  "name": "hexo-sage-posts",
-  "version": "0.0.1",
-  "description": "A plugin to hide specified posts from your Hexo blog and make them only accessible by links.",
+  "name": "hexo-hide-posts",
+  "version": "0.1.0",
+  "description": "A plugin to hide specific posts from your Hexo blog and make them only accessible by links.",
   "main": "index.js",
   "scripts": {
     "test": "eslint index.js"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/printempw/hexo-sage-posts.git"
+    "url": "https://github.com/printempw/hexo-hide-posts.git"
   },
-  "homepage": "https://github.com/printempw/hexo-sage-posts",
+  "homepage": "https://github.com/printempw/hexo-hide-posts",
   "keywords": [
     "hexo",
     "plugin",
-    "sage",
+    "hide",
     "unlisted",
     "private"
   ],
-  "author": "printempw <h@prinzeugen.net>",
+  "author": "printempw <printempw@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "eslint": "^5.8.0",
+    "eslint": "^6.4.0",
     "eslint-config-hexo": "^3.0.0"
   }
 }
