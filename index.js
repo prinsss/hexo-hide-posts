@@ -91,3 +91,16 @@ hexo.extend.filter.register('after_init', function () {
 
   hexo.log.debug('hexo-hide-posts: wrapper generators initialized');
 });
+
+// Usage: `$ hexo show_hidden`
+hexo.extend.console.register('show_hidden', 'Show a list of all hidden articles.', function () {
+  this.load().then(() => {
+    this.locals.get('hidden_posts').forEach(post => {
+      console.log('');
+      // Print properties
+      ['source', 'slug', 'title', 'date', 'updated'].forEach(prop => {
+        console.log(`${chalk.green(prop)}: ${post[prop]}`);
+      });
+    });
+  });
+});

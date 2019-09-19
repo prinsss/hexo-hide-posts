@@ -33,6 +33,10 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
 This post will not be shown anywhere, but you can still access it by `https://hexo.test/lorem-ipsum/`.
 
+To get a list of hidden posts, you can run `hexo show_hidden` from command line.
+
+For developers, `all_posts` and `hidden_posts` added to [Local Variables](https://hexo.io/api/locals) may be useful.
+
 ## Config
 
 In your site's `_config.yml`:
