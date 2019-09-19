@@ -49,6 +49,8 @@ hide_posts:
   # Generators which you want to expose all posts (include hidden ones) to.
   # Common generators: index, tag, category, archive, sitemap, feed, etc.
   public_generators: []
+  # Add "noindex" meta tag to prevent hidden posts from being indexed by search engines
+  noindex: true
 ```
 
 e.g. Set filter to `secret`, so you can use `secret: true` in front-matter instead.
