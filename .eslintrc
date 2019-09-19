@@ -9,6 +9,9 @@
       "named": "never",
       "asyncArrow": "always"
     }],
-    "node/no-unsupported-features": "off"
+    "node/no-unsupported-features": "off",
+    "node/no-extraneous-require": ["error", {
+      "allowModules": ["chalk"]
+    }]
   }
 }

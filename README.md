@@ -40,7 +40,11 @@ In your site's `_config.yml`:
 ```yml
 # hexo-hide-posts
 hide_posts:
-  filter: hidden    # Change the filter name to fit your need
+  # Change the filter name to fit your need
+  filter: hidden
+  # Generators which you want to expose all posts (include hidden ones) to.
+  # Common generators: index, tag, category, archive, sitemap, feed, etc.
+  public_generators: []
 ```
 
 e.g. Set filter to `secret`, so you can use `secret: true` in front-matter instead.

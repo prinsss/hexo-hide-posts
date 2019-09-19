@@ -1,11 +1,17 @@
 /* global hexo */
 'use strict';
 
-// Expose the filter keyword so users can change it by their demand,
-// and the default keyword is `hidden`.
+const chalk = require('chalk');
+
+// Load plugin config
 const config = Object.assign({
-  filter: 'hidden'
+  filter: 'hidden',
+  public_generators: []
 }, hexo.config.hide_posts);
+
+if (config.public_generators && !Array.isArray(config.public_generators)) {
+  config.public_generators = [config.public_generators];
+}
 
 // Modify posts in `hexo.locals` before running generators.
 // @see https://github.com/hexojs/hexo/blob/master/lib/hexo/index.js#L317
@@ -32,25 +38,56 @@ hexo.extend.filter.register('before_generate', function () {
   this.locals.set('all_posts', all_posts);
   this.locals.set('hidden_posts', hidden_posts);
   this.locals.set('posts', normal_posts);
+
+  hexo.log.info('%s posts are marked as hidden', chalk.magenta(hidden_posts.length));
 });
 
-// @see https://github.com/hexojs/hexo/blob/master/lib/plugins/generator/post.js
-const original_post_generator = hexo.extend.generator.get('post');
+// Hook on `after_init` filter to make sure all plugins are loaded
+hexo.extend.filter.register('after_init', function () {
+  // Do a copy for original generators. Don't just grab `hexo.extend.generator.store`
+  // directly, that will lead to circular reference in callbacks.
+  const original = {};
+  for (const name in hexo.extend.generator.list()) {
+    original[name] = hexo.extend.generator.get(name);
+  }
 
-// Here we overwrite the 'post' generator to inject our codes
-hexo.extend.generator.register('post', async function (locals) {
-  const fg = original_post_generator.bind(this);
+  // Wrap and overwrite generators to inject our codes
+  hexo.extend.generator.register('post', async function (locals) {
+    const fg = original.post.bind(this);
 
-  // Pass public posts and hidden posts to original generator
-  const generated_public = await fg(locals);
-  const generated_hidden = await fg(Object.assign(locals, {
-    posts: locals.hidden_posts
-  }));
+    // Pass public posts and hidden posts to original generator
+    const generated_public = await fg(locals);
+    const generated_hidden = await fg(Object.assign({}, locals, {
+      posts: locals.hidden_posts
+    }));
 
-  // Remove post.prev and post.next for hidden posts
-  generated_hidden.forEach(ele => {
-    ele.data.prev = ele.data.next = null;
+    // Remove post.prev and post.next for hidden posts
+    generated_hidden.forEach(ele => {
+      ele.data.prev = ele.data.next = null;
+    });
+
+    return generated_public.concat(generated_hidden);
   });
 
-  return generated_public.concat(generated_hidden);
+  // Then we hack into other generators if necessary
+  config.public_generators.filter(
+    name => Object.keys(original).includes(name)
+  ).forEach(name => {
+    hexo.log.debug('Expose hidden posts to generator: %s', chalk.magenta(name));
+
+    // Overwrite original generator
+    hexo.extend.generator.register(name, function (locals) {
+      const fg = original[name].bind(this);
+
+      return fg(Object.assign({}, locals, {
+        // Build new Warehouse Query object which includes 'sage' posts
+        // @see https://hexojs.github.io/warehouse/Query.html
+        posts: new locals.posts.constructor(
+          locals.posts.data.concat(locals.hidden_posts.data)
+        )
+      }));
+    });
+  });
+
+  hexo.log.debug('hexo-hide-posts: wrapper generators initialized');
 });
