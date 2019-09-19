@@ -1,10 +1,14 @@
 {
   "extends": "hexo",
+  "parserOptions": {
+    "ecmaVersion": 2017
+  },
   "rules": {
     "space-before-function-paren": ["error", {
       "anonymous": "always",
       "named": "never",
       "asyncArrow": "always"
-    }]
+    }],
+    "node/no-unsupported-features": "off"
   }
 }
