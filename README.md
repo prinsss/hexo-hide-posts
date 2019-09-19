@@ -3,6 +3,8 @@
 [![build-status](https://travis-ci.org/printempw/hexo-hide-posts.svg?branch=master)](https://travis-ci.org/printempw/hexo-hide-posts)
 [![npm-version](https://img.shields.io/npm/v/hexo-hide-posts.svg)](https://www.npmjs.com/package/hexo-hide-posts)
 
+[**中文文档**](https://github.com/printempw/hexo-hide-posts/blob/master/README_ZH.md)
+
 A plugin to hide specific posts from your Hexo blog and make them only accessible by links.
 
 **Hide** means your posts will not come up in article lists (homepage, archive, category, tag, feed, sitemap, whatever), or search results either (by telling search engines not to index these pages with a "noindex" meta tag). Only those who know the link can view the post, and you can share the link with anyone.
