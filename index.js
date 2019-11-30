@@ -42,7 +42,7 @@ hexo.extend.filter.register('before_generate', function () {
   this.locals.set('hidden_posts', hidden_posts);
   this.locals.set('posts', normal_posts);
 
-  hexo.log.info('%s posts are marked as hidden', chalk.magenta(hidden_posts.length));
+  hexo.log.debug('%s posts are marked as hidden', chalk.magenta(hidden_posts.length));
 });
 
 // Hook on `after_init` filter to make sure all plugins are loaded
