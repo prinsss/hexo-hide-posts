@@ -35,6 +35,7 @@ hexo.extend.filter.register('before_generate', function () {
   const all_posts = this.locals.get('posts');
   const hidden_posts = all_posts.find({ [config.filter]: true });
   const normal_posts = all_posts.filter(post => !post[config.filter]);
+  const hidden_pages = this.locals.get('pages').find({ [config.filter]: true });
 
   // Exclude hidden posts from all generators except 'post'
   // @see https://github.com/hexojs/hexo/blob/master/lib/hexo/locals.js
@@ -42,7 +43,19 @@ hexo.extend.filter.register('before_generate', function () {
   this.locals.set('hidden_posts', hidden_posts);
   this.locals.set('posts', normal_posts);
 
-  hexo.log.debug('%s posts are marked as hidden', chalk.magenta(hidden_posts.length));
+  // Pages are currently not being processed by most of hexo generators,
+  // which means they should be only accessible by permalinks by default.
+  // Exceptionally, we hide it from sitemap and append noindex tag if needed.
+  hidden_pages.forEach(page => {
+    page.sitemap = false;
+    page.save();
+  });
+
+  hexo.log.debug(
+    '%s posts and %s pages are marked as hidden',
+    chalk.magenta(hidden_posts.length),
+    chalk.magenta(hidden_pages.length)
+  );
 });
 
 // Hook on `after_init` filter to make sure all plugins are loaded
