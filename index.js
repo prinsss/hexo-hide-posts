@@ -63,7 +63,7 @@ hexo.extend.filter.register('before_generate', function () {
 });
 
 // Hook on `after_init` filter to make sure all plugins are loaded
-hexo.extend.filter.register('after_init', function () {
+hexo.extend.filter.register('after_init', () => {
   // Do a copy for original generators. Don't just grab `hexo.extend.generator.store`
   // directly, that will lead to circular reference in callbacks.
   const original = {};
@@ -83,7 +83,8 @@ hexo.extend.filter.register('after_init', function () {
 
     // Remove post.prev and post.next for hidden posts
     generated_hidden.forEach(ele => {
-      ele.data.prev = ele.data.next = null;
+      ele.data.prev = null;
+      ele.data.next = null;
     });
 
     return generated_public.concat(generated_hidden);
