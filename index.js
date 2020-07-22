@@ -55,11 +55,8 @@ hexo.extend.filter.register('before_generate', function () {
     page.save();
   });
 
-  hexo.log.debug(
-    '%s posts and %s pages are marked as hidden',
-    chalk.magenta(hidden_posts.length),
-    chalk.magenta(hidden_pages.length)
-  );
+  debug_log('hidden posts:', chalk.magenta(hidden_posts.length));
+  debug_log('hidden pages:', chalk.magenta(hidden_pages.length));
 });
 
 // Hook on `after_init` filter to make sure all plugins are loaded
@@ -70,10 +67,12 @@ hexo.extend.filter.register('after_init', () => {
   for (const name in hexo.extend.generator.list()) {
     original[name] = hexo.extend.generator.get(name);
   }
+  debug_log('retrieved original generator:', chalk.magenta(Object.keys(original).join(' ')));
 
   // Wrap and overwrite generators to inject our codes
   hexo.extend.generator.register('post', async function (locals) {
     const fg = original.post.bind(this);
+    debug_log('generating both normal posts and hidden posts');
 
     // Pass public posts and hidden posts to original generator
     const generated_public = await fg(locals);
@@ -99,6 +98,7 @@ hexo.extend.filter.register('after_init', () => {
     // Overwrite original generator
     hexo.extend.generator.register(name, function (locals) {
       const fg = original[name].bind(this);
+      debug_log('executing wrapped generator:', chalk.magenta(name));
 
       return fg(Object.assign({}, locals, {
         // Build new Warehouse Query object which includes 'sage' posts
