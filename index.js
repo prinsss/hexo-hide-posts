@@ -16,6 +16,10 @@ if (config.public_generators && !Array.isArray(config.public_generators)) {
   config.public_generators = [config.public_generators];
 }
 
+function debug_log(...args) {
+  hexo.log.debug('hexo-hide-posts:', ...args);
+}
+
 // Modify posts in `hexo.locals` before running generators.
 // @see https://github.com/hexojs/hexo/blob/master/lib/hexo/index.js#L317
 //
@@ -89,7 +93,7 @@ hexo.extend.filter.register('after_init', function () {
   config.public_generators.filter(
     name => Object.keys(original).includes(name)
   ).forEach(name => {
-    hexo.log.debug('Expose hidden posts to generator: %s', chalk.magenta(name));
+    debug_log('expose hidden posts to generator:', chalk.magenta(name));
 
     // Overwrite original generator
     hexo.extend.generator.register(name, function (locals) {
@@ -105,7 +109,36 @@ hexo.extend.filter.register('after_init', function () {
     });
   });
 
-  hexo.log.debug('hexo-hide-posts: wrapper generators initialized');
+  debug_log('wrapper generators initialized');
+
+  // Hijack Category.posts and Tag.posts getter to find in hidden posts
+  // @see https://github.com/hexojs/hexo/blob/master/lib/models/category.js
+  if (config.public_generators.includes('category')) {
+    hexo.database._models.Category.schema.virtual('posts').get(function () {
+      const PostCategory = hexo.model('PostCategory');
+      const ids = PostCategory.find({category_id: this._id}).map(item => item.post_id);
+      const posts = hexo.locals.get('all_posts') || hexo.locals.get('posts');
+
+      return posts.find({
+        _id: {$in: ids}
+      });
+    });
+    debug_log('hijacked Category.posts getter');
+  }
+
+  // @see https://github.com/hexojs/hexo/blob/master/lib/models/tag.js
+  if (config.public_generators.includes('tag')) {
+    hexo.database._models.Tag.schema.virtual('posts').get(function () {
+      const PostTag = hexo.model('PostTag');
+      const ids = PostTag.find({tag_id: this._id}).map(item => item.post_id);
+      const posts = hexo.locals.get('all_posts') || hexo.locals.get('posts');
+
+      return posts.find({
+        _id: {$in: ids}
+      });
+    });
+    debug_log('hijacked Tag.posts getter');
+  }
 });
 
 // Usage: `$ hexo hidden:list`
