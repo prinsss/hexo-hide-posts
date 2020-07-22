@@ -122,7 +122,7 @@ hexo.extend.filter.register('after_post_render', data => {
 // to recognize hidden posts, and manipulate whatever we want.
 if (config.noindex) {
   hexo.extend.filter.register('after_render:html', str => {
-    if (str.includes(config.html_flag)) {
+    if (str && str.includes(config.html_flag)) {
       str = str.replace('</title>', '</title>' + config.noindex_tag);
     }
     return str;
