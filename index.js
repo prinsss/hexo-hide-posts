@@ -145,7 +145,10 @@ hexo.extend.filter.register('after_init', () => {
 // Usage: `$ hexo hidden:list`
 hexo.extend.console.register('hidden:list', 'Show a list of all hidden articles.', function () {
   this.load().then(() => {
-    this.locals.get('hidden_posts').forEach(post => {
+    [].concat(
+      this.locals.get('hidden_posts').toArray(),
+      this.locals.get('pages').find({ [config.filter]: true }).toArray()
+    ).forEach(post => {
       console.log('');
       // Print properties
       ['source', 'slug', 'title', 'date', 'updated'].forEach(prop => {
