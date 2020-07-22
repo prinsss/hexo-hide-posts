@@ -21,7 +21,7 @@
   "author": "printempw <printempw@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "eslint": "^6.4.0",
-    "eslint-config-hexo": "^3.0.0"
+    "eslint": "^7.5.0",
+    "eslint-config-hexo": "^4.1.0"
   }
 }
