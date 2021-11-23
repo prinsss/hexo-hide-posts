@@ -46,6 +46,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 ```yml
 # hexo-hide-posts
 hide_posts:
+  enable: true
   # 可以改成其他你喜欢的名字
   filter: hidden
   # 指定你想要传递隐藏文章的 generator，比如让所有隐藏文章在存档页面可见
