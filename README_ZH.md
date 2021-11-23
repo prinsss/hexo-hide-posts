@@ -1,7 +1,7 @@
 # hexo-hide-posts
 
-[![build-status](https://travis-ci.org/printempw/hexo-hide-posts.svg?branch=master)](https://travis-ci.org/printempw/hexo-hide-posts)
 [![npm-version](https://img.shields.io/npm/v/hexo-hide-posts.svg)](https://www.npmjs.com/package/hexo-hide-posts)
+[![hexo-version](https://img.shields.io/badge/hexo-%3E=4.0.0-blue?logo=hexo)](https://hexo.io)
 
 [**English Documentation**](https://github.com/printempw/hexo-hide-posts/blob/master/README.md)
 
