@@ -1,17 +1,7 @@
 {
   "extends": "hexo",
+  "root": true,
   "parserOptions": {
-    "ecmaVersion": 2017
-  },
-  "rules": {
-    "space-before-function-paren": ["error", {
-      "anonymous": "always",
-      "named": "never",
-      "asyncArrow": "always"
-    }],
-    "node/no-unsupported-features": "off",
-    "node/no-extraneous-require": ["error", {
-      "allowModules": ["chalk"]
-    }]
+    "ecmaVersion": 2018
   }
 }

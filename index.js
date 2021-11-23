@@ -28,7 +28,7 @@ function debug_log(...args) {
 // generators ('archive', 'category', 'tag', 'feed', 'sitemap', etc.) will
 // just ignore them. We also put the 'hidden' posts into `hexo.locals.hidden_posts`
 // for further use (to make them correctly processed by 'post' generator).
-hexo.extend.filter.register('before_generate', function () {
+hexo.extend.filter.register('before_generate', function() {
   // Quick fix, I don't know exactly why.
   // It works just fine without this line on Node 8.x, but on Node 10.x,
   // the `hexo.locals.posts` we got here becomes incomplete. So we have to
@@ -70,7 +70,7 @@ hexo.extend.filter.register('after_init', () => {
   debug_log('retrieved original generator:', chalk.magenta(Object.keys(original).join(' ')));
 
   // Wrap and overwrite generators to inject our codes
-  hexo.extend.generator.register('post', async function (locals) {
+  hexo.extend.generator.register('post', async function(locals) {
     const fg = original.post.bind(this);
     debug_log('generating both normal posts and hidden posts');
 
@@ -96,7 +96,7 @@ hexo.extend.filter.register('after_init', () => {
     debug_log('expose hidden posts to generator:', chalk.magenta(name));
 
     // Overwrite original generator
-    hexo.extend.generator.register(name, function (locals) {
+    hexo.extend.generator.register(name, function(locals) {
       const fg = original[name].bind(this);
       debug_log('executing wrapped generator:', chalk.magenta(name));
 
@@ -115,7 +115,7 @@ hexo.extend.filter.register('after_init', () => {
   // Hijack Category.posts and Tag.posts getter to find in hidden posts
   // @see https://github.com/hexojs/hexo/blob/master/lib/models/category.js
   if (config.public_generators.includes('category')) {
-    hexo.database._models.Category.schema.virtual('posts').get(function () {
+    hexo.database._models.Category.schema.virtual('posts').get(function() {
       const PostCategory = hexo.model('PostCategory');
       const ids = PostCategory.find({category_id: this._id}).map(item => item.post_id);
       const posts = hexo.locals.get('all_posts') || hexo.locals.get('posts');
@@ -129,7 +129,7 @@ hexo.extend.filter.register('after_init', () => {
 
   // @see https://github.com/hexojs/hexo/blob/master/lib/models/tag.js
   if (config.public_generators.includes('tag')) {
-    hexo.database._models.Tag.schema.virtual('posts').get(function () {
+    hexo.database._models.Tag.schema.virtual('posts').get(function() {
       const PostTag = hexo.model('PostTag');
       const ids = PostTag.find({tag_id: this._id}).map(item => item.post_id);
       const posts = hexo.locals.get('all_posts') || hexo.locals.get('posts');
@@ -143,7 +143,7 @@ hexo.extend.filter.register('after_init', () => {
 });
 
 // Usage: `$ hexo hidden:list`
-hexo.extend.console.register('hidden:list', 'Show a list of all hidden articles.', function () {
+hexo.extend.console.register('hidden:list', 'Show a list of all hidden articles.', function() {
   this.load().then(() => {
     [].concat(
       this.locals.get('hidden_posts').toArray(),

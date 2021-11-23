@@ -4,7 +4,7 @@
   "description": "A plugin to hide specific posts from your Hexo blog and make them only accessible by links.",
   "main": "index.js",
   "scripts": {
-    "test": "eslint index.js"
+    "lint": "eslint ."
   },
   "repository": {
     "type": "git",
