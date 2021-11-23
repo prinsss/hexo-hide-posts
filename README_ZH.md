@@ -33,7 +33,7 @@ hidden: true
 Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 ```
 
-虽然首页上被隐藏了，但你仍然可以通过 `https://hexo.test/lorem-ipsum/` 链接访问它。
+虽然首页上被隐藏了，但你仍然可以通过 `https://hexo.test/lorem-ipsum/` 链接访问它。（如果想要完全隐藏一篇文章，可以直接将其设置为[草稿](https://hexo.io/zh-cn/docs/writing.html#%E8%8D%89%E7%A8%BF)）
 
 你可以在命令行运行 `hexo hidden:list` 来获取当前所有的已隐藏文章列表。
 
@@ -57,6 +57,8 @@ hide_posts:
 
 举个栗子：设置 `filter: secret` 之后，你就可以在 front-matter 中使用 `secret: true` 来隐藏文章了。
 
+**注意**：不是所有插件注册的 generator 名称都与其插件名称相同。比如 [`hexo-generator-searchdb`](https://github.com/next-theme/hexo-generator-searchdb) 插件，其注册的 generator 名称就是 `xml` 和 `json`，而非 `searchdb`。因此，在填写 `public_generators` 参数时要注意使用插件实际注册的 generator 名称（可以查阅对应插件的源码来获取准确的注册名）。
+
 ## 开源许可
 
-MIT License (c) 2019 printempw
+MIT

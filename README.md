@@ -33,7 +33,7 @@ hidden: true
 Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 ```
 
-This post will not be shown anywhere, but you can still access it by `https://hexo.test/lorem-ipsum/`.
+This post will not be shown anywhere, but you can still access it by `https://hexo.test/lorem-ipsum/`. (If you want to completely prevent a post from rendering, just set it as a [draft](https://hexo.io/docs/writing.html#Drafts).)
 
 To get a list of hidden posts, you can run `hexo hidden:list` from command line.
 
@@ -57,6 +57,12 @@ hide_posts:
 
 e.g. Set filter to `secret`, so you can use `secret: true` in front-matter instead.
 
+**Note:** although most of generator plugins respect a naming convention that they register
+generator with the name in their package names, the generator name could be arbitrary.
+For example, [`hexo-generator-searchdb`](https://github.com/next-theme/hexo-generator-searchdb) does not register
+generators with name `searchdb`, but `xml` and `json`.
+For accurate generator name, you should check their source code.
+
 ## License
 
-MIT License (c) 2019 printempw
+MIT
