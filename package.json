@@ -8,9 +8,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/printempw/hexo-hide-posts.git"
+    "url": "https://github.com/prinsss/hexo-hide-posts.git"
   },
-  "homepage": "https://github.com/printempw/hexo-hide-posts",
+  "homepage": "https://github.com/prinsss/hexo-hide-posts",
   "keywords": [
     "hexo",
     "plugin",
@@ -18,10 +18,13 @@
     "unlisted",
     "private"
   ],
-  "author": "printempw <printempw@gmail.com>",
+  "author": "prin <printempw@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "eslint": "^7.5.0",
-    "eslint-config-hexo": "^4.1.0"
+    "eslint": "^8.3.0",
+    "eslint-config-hexo": "^4.2.0"
+  },
+  "dependencies": {
+    "chalk": "^4.1.2"
   }
 }
