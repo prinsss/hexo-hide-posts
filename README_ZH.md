@@ -13,8 +13,8 @@
 
 ## 安装
 
-``` bash
-$ npm install hexo-hide-posts --save
+```bash
+npm install hexo-hide-posts
 ```
 
 ## 使用
@@ -44,21 +44,65 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 在你的站点 `_config.yml` 中添加如下配置：
 
 ```yml
-# hexo-hide-posts
 hide_posts:
+  # 是否启用 hexo-hide-posts
   enable: true
-  # 可以改成其他你喜欢的名字
+
+  # 隐藏文章的 front-matter 标识，也可以改成其他你喜欢的名字
   filter: hidden
-  # 指定你想要传递隐藏文章的 generator，比如让所有隐藏文章在存档页面可见
-  # 常见的 generators 有：index, tag, category, archive, sitemap, feed, etc.
-  public_generators: []
+
   # 为隐藏的文章添加 noindex meta 标签，阻止搜索引擎收录
   noindex: true
+
+  # 设置白名单，白名单中的 generator 可以访问隐藏文章
+  # 常见的 generators 有：index, tag, category, archive, sitemap, feed, etc.
+  # allowlist_generators: []
+
+  # 设置黑名单，黑名单中的 generator 不可以访问隐藏文章
+  # 如果同时设置了黑名单和白名单，白名单的优先级更高
+  # blocklist_generators: ['*']
 ```
 
 举个栗子：设置 `filter: secret` 之后，你就可以在 front-matter 中使用 `secret: true` 来隐藏文章了。
 
-**注意**：不是所有插件注册的 generator 名称都与其插件名称相同。比如 [`hexo-generator-searchdb`](https://github.com/next-theme/hexo-generator-searchdb) 插件，其注册的 generator 名称就是 `xml` 和 `json`，而非 `searchdb`。因此，在填写 `public_generators` 参数时要注意使用插件实际注册的 generator 名称（可以查阅对应插件的源码来获取准确的注册名）。
+## 高级配置
+
+在 0.3.0 及以上版本，插件提供了更精细的黑白名单控制。
+
+**示例1**：让所有隐藏文章在存档页面和分类页面中可见，其他地方不可见
+
+```yml
+hide_posts:
+  enable: true
+  # 功能与 0.2.0 及以前版本的 public_generators 一致，改了个名字
+  allowlist_generators: ['archive', 'category']
+```
+
+**示例2**：仅在首页和 RSS 隐藏部分文章，其他地方可见
+
+```yml
+hide_posts:
+  enable: true
+  # 更多黑白名单的高级配置示例，可以在 `lib/isGeneratorAllowed.test.js` 文件中查看
+  allowlist_generators: ['*']
+  blocklist_generators: ['index', 'feed']
+```
+
+**注意**：不是所有插件注册的 generator 名称都与其插件名称相同。比如 [`hexo-generator-searchdb`](https://github.com/next-theme/hexo-generator-searchdb) 插件，其注册的 generator 名称就是 `xml` 和 `json`，而非 `searchdb`。因此，在填写 `allowlist_generators` 和 `blocklist_generators` 参数时要注意使用插件实际注册的 generator 名称（可以查阅对应插件的源码来获取准确的注册名）。
+
+> Tips: 运行 `hexo g --debug`，可以在调试日志中查看所有已安装的 generator 的注册名称。
+
+**示例3**：使用自定义 JavaScript 函数判断白名单
+
+在博客中添加一个[插件脚本](https://hexo.io/docs/plugins)：
+
+```js
+// scripts/allowlist.js
+
+hexo.config.hide_posts.allowlist_function = function (name) {
+  return /archive|feed/.test(name);
+}
+```
 
 ## 开源许可
 

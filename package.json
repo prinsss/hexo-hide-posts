@@ -1,6 +1,6 @@
 {
   "name": "hexo-hide-posts",
-  "version": "0.3.0-beta.4",
+  "version": "0.3.0",
   "description": "A plugin to hide specific posts from your Hexo blog and make them only accessible by links.",
   "main": "index.js",
   "scripts": {

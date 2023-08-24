@@ -14,7 +14,7 @@ This means that posts marked as hidden could still be seen by anyone, but only i
 ## Installation
 
 ``` bash
-$ npm install hexo-hide-posts --save
+npm install hexo-hide-posts
 ```
 
 ## Usage
@@ -44,25 +44,70 @@ For developers, `all_posts` and `hidden_posts` added to [Local Variables](https:
 In your site's `_config.yml`:
 
 ```yml
-# hexo-hide-posts
 hide_posts:
+  # Should hexo-hide-posts be enabled.
   enable: true
-  # Change the filter name to fit your need
+
+  # The front-matter key for flagging hidden posts.
+  # You can change the filter name if you like.
   filter: hidden
-  # Generators which you want to expose all posts (include hidden ones) to.
-  # Common generators: index, tag, category, archive, sitemap, feed, etc.
-  public_generators: []
-  # Add "noindex" meta tag to prevent hidden posts from being indexed by search engines
+
+  # Add "noindex" meta tag to prevent hidden posts from being indexed by search engines.
   noindex: true
+
+  # Generators in the allowlist will have access to the hidden posts.
+  # Common generators in Hexo: 'index', 'tag', 'category', 'archive', 'sitemap', 'feed'
+  # allowlist_generators: []
+
+  # Generators in the blocklist can *not* access the hidden posts.
+  # The allowlist has higher priority than the blocklist, if both set.
+  # blocklist_generators: ['*']
 ```
 
 e.g. Set filter to `secret`, so you can use `secret: true` in front-matter instead.
+
+## Advanced Config
+
+For power users, they can have a more fine-grained control on access to hidden posts by configuring blocklist and allowlist. This feature is available in version 0.3.0 or later.
+
+**Config Example 1**: Hide the flagged posts everywhere, but make them visible on archives page and sitemap.
+
+```yml
+hide_posts:
+  enable: true
+  # This property was previously called `public_generators` prior to v0.2.0, and was renamed in newer version.
+  allowlist_generators: ['archive', 'sitemap']
+```
+
+**Config Example 2**: Hide the flagged posts only on homepage and RSS, and show them elsewhere.
+
+```yml
+hide_posts:
+  enable: true
+  # For advanced usage of allowlist/blocklist, check `lib/isGeneratorAllowed.test.js` for more test cases.
+  allowlist_generators: ['*']
+  blocklist_generators: ['index', 'feed']
+```
 
 **Note:** although most of generator plugins respect a naming convention that they register
 generator with the name in their package names, the generator name could be arbitrary.
 For example, [`hexo-generator-searchdb`](https://github.com/next-theme/hexo-generator-searchdb) does not register
 generators with name `searchdb`, but `xml` and `json`.
 For accurate generator name, you should check their source code.
+
+> Tips: Run `hexo g --debug` command will show you all the generators installed with their names in the debug log.
+
+**Config Example 3**: Pass a custom JavaScript function to determine which generator should be allowlisted.
+
+This could be done by adding a [plugin script](https://hexo.io/docs/plugins) to your Hexo blog.
+
+```js
+// scripts/allowlist.js
+
+hexo.config.hide_posts.allowlist_function = function (name) {
+  return /archive|feed/.test(name);
+}
+```
 
 ## License
 
