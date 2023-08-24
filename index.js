@@ -1,11 +1,21 @@
 /* global hexo */
 'use strict';
 
+// Backward compatibility for v0.2.0
+if (hexo.config.hide_posts) {
+  const config = hexo.config.hide_posts;
+  if (config.public_generators && !config.allowlist_generators) {
+    config.allowlist_generators = config.public_generators;
+  }
+}
+
 // Load plugin config
 hexo.config.hide_posts = Object.assign({
   enable: true,
   filter: 'hidden',
-  public_generators: [],
+  allowlist_generators: [],
+  blocklist_generators: ['*'],
+  allowlist_function: null,
   noindex: true,
   noindex_tag: '<meta name="robots" content="noindex">',
   html_flag: '<!-- flag of hidden posts -->'
@@ -17,8 +27,13 @@ if (!config.enable) {
   return;
 }
 
-if (config.public_generators && !Array.isArray(config.public_generators)) {
-  config.public_generators = [config.public_generators];
+// Ensure allowlist and blocklist are arrays
+if (config.allowlist_generators && !Array.isArray(config.allowlist_generators)) {
+  config.allowlist_generators = [config.allowlist_generators];
+}
+
+if (config.blocklist_generators && !Array.isArray(config.blocklist_generators)) {
+  config.blocklist_generators = [config.blocklist_generators];
 }
 
 // Prepare hidden posts
