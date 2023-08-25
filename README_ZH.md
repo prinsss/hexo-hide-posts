@@ -97,10 +97,65 @@ hide_posts:
 在博客中添加一个[插件脚本](https://hexo.io/docs/plugins)：
 
 ```js
-// scripts/allowlist.js
+// scripts/allowlist.js (文件名任意)
 
 hexo.config.hide_posts.allowlist_function = function (name) {
   return /archive|feed/.test(name);
+}
+```
+
+## 自定义 ACL 函数
+
+如果你需要更细粒度地控制某篇文章应该如何显示或隐藏，可以使用本插件的更高级功能：**自定义 ACL 函数**。
+
+插件支持传入自定义 JavaScript 函数作为 ACL (Access Control List，访问控制列表)。ACL 函数功能十分强大，可以完全控制某一篇文章是否应该被某一个 generator 渲染。函数接受两个参数：文章对象 `post`，以及当前 generator 的注册名称 `generatorName`。同时，也可以访问全局变量 `hexo`。
+
+下面是一个较为复杂的例子，实现了以下功能，如有需要可自行修改使用：
+
+- 在 front-matter 中标记为 `acl: no-rss` 的文章，博客中正常展示，但在 RSS 和 sitemap 中隐藏
+- 标记为 `acl: archive-only` 的文章，仅在存档页面中展示，在其他地方隐藏
+- 分类为 `news` 的文章，在所有地方都展示
+- 发布日期早于 2020 年的文章，在所有地方都隐藏
+
+```js
+// FILE: scripts/acl.js
+
+// Advanced usage: ACL (Access Control List) per post.
+// The most powerful way to control which posts should be included in which generator.
+// Return `true` to allow and `false` to block access. It's all up to you.
+hexo.config.hide_posts.acl_function_per_post = function (post, generatorName) {
+  // Mark the post with front-matter `acl: xxx` so we can recognize it here.
+  // For the full definition of `post` and all available properties,
+  // see: https://github.com/hexojs/hexo/blob/master/lib/models/post.js
+  // console.log(post, post.slug, post.acl, post.tags, post.categories)
+
+  // To filter posts by tag, use this instead:
+  // if (post.tags.find({ name: 'no-rss' }).length) {}
+
+  // Posts marked as "no-rss" will not be included in the feed and sitemap
+  if (post.acl === 'no-rss') {
+    return generatorName !== 'atom' && generatorName !== 'sitemap';
+  }
+
+  // Posts marked as "archive-only" will only be included in the archive
+  if (post.acl === 'archive-only') {
+    return generatorName === 'archive';
+  }
+
+  // You can also filter posts with tags and categories
+  // All posts in category "news" will NOT be hidden
+  if (post.categories.find({ name: 'news' }).length) {
+    return true;
+  }
+
+  // Or even the creation date!
+  // All posts created before 2020 will be hidden
+  if (post.date.year() < 2020) {
+    return false;
+  }
+
+  // For the rest of posts, apply the default rule (allowlist & blocklist)
+  return isGeneratorAllowed(hexo.config.hide_posts, generatorName);
 }
 ```
 

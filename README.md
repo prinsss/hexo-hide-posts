@@ -102,10 +102,60 @@ For accurate generator name, you should check their source code.
 This could be done by adding a [plugin script](https://hexo.io/docs/plugins) to your Hexo blog.
 
 ```js
-// scripts/allowlist.js
+// FILE: scripts/allowlist.js (filename does not matter, you name it)
 
 hexo.config.hide_posts.allowlist_function = function (name) {
   return /archive|feed/.test(name);
+}
+```
+
+## Custom ACL Function
+
+For even more fine-grained control over which posts should be visible in which place, meet the most powerful feature of the plugin: **Custom ACL (Access Control List) Function**.
+
+A custom JavaScript function could be configured to determine wether a generator could access a post or not, giving you the full control and inspection. The function accepts two arguments, the `post` object and the current `generatorName`. The global variable `hexo` is also available in the context.
+
+Here is an example. Use with caution!
+
+```js
+// FILE: scripts/acl.js
+
+// Advanced usage: ACL (Access Control List) per post.
+// The most powerful way to control which posts should be included in which generator.
+// Return `true` to allow and `false` to block access. It's all up to you.
+hexo.config.hide_posts.acl_function_per_post = function (post, generatorName) {
+  // Mark the post with front-matter `acl: xxx` so we can recognize it here.
+  // For the full definition of `post` and all available properties,
+  // see: https://github.com/hexojs/hexo/blob/master/lib/models/post.js
+  // console.log(post, post.slug, post.acl, post.tags, post.categories)
+
+  // To filter posts by tag, use this instead:
+  // if (post.tags.find({ name: 'no-rss' }).length) {}
+
+  // Posts marked as "no-rss" will not be included in the feed and sitemap
+  if (post.acl === 'no-rss') {
+    return generatorName !== 'atom' && generatorName !== 'sitemap';
+  }
+
+  // Posts marked as "archive-only" will only be included in the archive
+  if (post.acl === 'archive-only') {
+    return generatorName === 'archive';
+  }
+
+  // You can also filter posts with tags and categories
+  // All posts in category "news" will NOT be hidden
+  if (post.categories.find({ name: 'news' }).length) {
+    return true;
+  }
+
+  // Or even the creation date!
+  // All posts created before 2020 will be hidden
+  if (post.date.year() < 2020) {
+    return false;
+  }
+
+  // For the rest of posts, apply the default rule (allowlist & blocklist)
+  return isGeneratorAllowed(hexo.config.hide_posts, generatorName);
 }
 ```
 

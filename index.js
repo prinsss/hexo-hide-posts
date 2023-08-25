@@ -16,6 +16,7 @@ hexo.config.hide_posts = Object.assign({
   allowlist_generators: [],
   blocklist_generators: ['*'],
   allowlist_function: null,
+  acl_function_per_post: null,
   noindex: true,
   noindex_tag: '<meta name="robots" content="noindex">',
   html_flag: '<!-- flag of hidden posts -->'
