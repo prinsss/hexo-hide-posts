@@ -106,7 +106,7 @@ hexo.config.hide_posts.allowlist_function = function (name) {
 
 ## 自定义 ACL 函数
 
-如果你需要更细粒度地控制某篇文章应该如何显示或隐藏，可以使用本插件的更高级功能：**自定义 ACL 函数**。
+如果你需要更细粒度地控制某篇文章应该如何显示或隐藏，可以使用本插件的更高级功能：**自定义 ACL 函数**（需要 0.4.0 及以上版本）。
 
 插件支持传入自定义 JavaScript 函数作为 ACL (Access Control List，访问控制列表)。ACL 函数功能十分强大，可以完全控制某一篇文章是否应该被某一个 generator 渲染。函数接受两个参数：文章对象 `post`，以及当前 generator 的注册名称 `generatorName`。同时，也可以访问全局变量 `hexo`。
 
@@ -119,6 +119,7 @@ hexo.config.hide_posts.allowlist_function = function (name) {
 
 ```js
 // FILE: scripts/acl.js
+const isGeneratorAllowed = require('hexo-hide-posts/lib/isGeneratorAllowed');
 
 // Advanced usage: ACL (Access Control List) per post.
 // The most powerful way to control which posts should be included in which generator.
@@ -128,9 +129,6 @@ hexo.config.hide_posts.acl_function_per_post = function (post, generatorName) {
   // For the full definition of `post` and all available properties,
   // see: https://github.com/hexojs/hexo/blob/master/lib/models/post.js
   // console.log(post, post.slug, post.acl, post.tags, post.categories)
-
-  // To filter posts by tag, use this instead:
-  // if (post.tags.find({ name: 'no-rss' }).length) {}
 
   // Posts marked as "no-rss" will not be included in the feed and sitemap
   if (post.acl === 'no-rss') {
@@ -144,6 +142,7 @@ hexo.config.hide_posts.acl_function_per_post = function (post, generatorName) {
 
   // You can also filter posts with tags and categories
   // All posts in category "news" will NOT be hidden
+  // if (post.tags.find({ name: 'news' }).length) {}
   if (post.categories.find({ name: 'news' }).length) {
     return true;
   }

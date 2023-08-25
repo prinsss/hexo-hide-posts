@@ -113,12 +113,13 @@ hexo.config.hide_posts.allowlist_function = function (name) {
 
 For even more fine-grained control over which posts should be visible in which place, meet the most powerful feature of the plugin: **Custom ACL (Access Control List) Function**.
 
-A custom JavaScript function could be configured to determine wether a generator could access a post or not, giving you the full control and inspection. The function accepts two arguments, the `post` object and the current `generatorName`. The global variable `hexo` is also available in the context.
+In version 0.4.0 and later, a custom JavaScript function could be configured to determine wether a generator could access a post or not, giving you the full control and inspection. The function accepts two arguments, the `post` object and the current `generatorName`. The global variable `hexo` is also available in the context.
 
 Here is an example. Use with caution!
 
 ```js
 // FILE: scripts/acl.js
+const isGeneratorAllowed = require('hexo-hide-posts/lib/isGeneratorAllowed');
 
 // Advanced usage: ACL (Access Control List) per post.
 // The most powerful way to control which posts should be included in which generator.
@@ -128,9 +129,6 @@ hexo.config.hide_posts.acl_function_per_post = function (post, generatorName) {
   // For the full definition of `post` and all available properties,
   // see: https://github.com/hexojs/hexo/blob/master/lib/models/post.js
   // console.log(post, post.slug, post.acl, post.tags, post.categories)
-
-  // To filter posts by tag, use this instead:
-  // if (post.tags.find({ name: 'no-rss' }).length) {}
 
   // Posts marked as "no-rss" will not be included in the feed and sitemap
   if (post.acl === 'no-rss') {
@@ -144,6 +142,7 @@ hexo.config.hide_posts.acl_function_per_post = function (post, generatorName) {
 
   // You can also filter posts with tags and categories
   // All posts in category "news" will NOT be hidden
+  // if (post.tags.find({ name: 'news' }).length) {}
   if (post.categories.find({ name: 'news' }).length) {
     return true;
   }
