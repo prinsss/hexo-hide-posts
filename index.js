@@ -17,6 +17,7 @@ hexo.config.hide_posts = Object.assign({
   blocklist_generators: ['*'],
   allowlist_function: null,
   acl_function_per_post: null,
+  hexo_7_compatibility_patch: hexo.version.startsWith('7'),
   noindex: true,
   noindex_tag: '<meta name="robots" content="noindex">',
   html_flag: '<!-- flag of hidden posts -->'
@@ -36,6 +37,9 @@ if (config.allowlist_generators && !Array.isArray(config.allowlist_generators)) 
 if (config.blocklist_generators && !Array.isArray(config.blocklist_generators)) {
   config.blocklist_generators = [config.blocklist_generators];
 }
+
+// Apply patch for Hexo 7.0
+hexo.extend.filter.register('before_generate', require('./lib/applyPatch'), 9);
 
 // Prepare hidden posts
 hexo.extend.filter.register('before_generate', require('./lib/prepareHiddenPosts'));
