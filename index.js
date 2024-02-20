@@ -38,11 +38,11 @@ if (config.blocklist_generators && !Array.isArray(config.blocklist_generators)) 
   config.blocklist_generators = [config.blocklist_generators];
 }
 
-// Apply patch for Hexo 7.0
-hexo.extend.filter.register('before_generate', require('./lib/applyPatch'), 9);
-
 // Prepare hidden posts
 hexo.extend.filter.register('before_generate', require('./lib/prepareHiddenPosts'));
+
+// Apply patch for Hexo 7.0
+hexo.extend.filter.register('before_generate', require('./lib/applyPatch'));
 
 // Hook into generators
 hexo.extend.filter.register('after_init', require('./lib/injectGenerators'));
